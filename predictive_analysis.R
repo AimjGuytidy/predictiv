@@ -1,6 +1,6 @@
 require(MASS)
-# install.packages("ISLR")
-#require(ISLR)
+#install.packages("ISLR")
+require(ISLR)
 require(car)
 
 boston_df <- Boston
@@ -64,7 +64,49 @@ summary(lm.fit6)
 contrasts(Urban) #this function contrasts helps to understand how R constructed the dummies
 contrasts(ShelveLoc)
 
+# Classification
+# Simple Logistic Regression
+default_data <- fix(Default)
+names(Default)
+logmodel.fit <- glm(default~student,data = Default,family = "binomial")
+summary(logmodel.fit)
 
+# Multiple Logistic Regression
+logmodel.fit <- glm(default~.,data = Default, family = "binomial" )
+summary(logmodel.fit)
+
+# boxplot visuals
+require(ggplot2)
+ggplot(Default)+
+  geom_boxplot(aes(student,balance,fill = student))
+
+ggplot(Default)+
+  geom_boxplot(aes(default,balance,fill = default))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###########################################
 # Linear Model Selection and Regularization
 
 # Best Subset Selection
