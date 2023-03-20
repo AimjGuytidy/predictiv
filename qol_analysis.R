@@ -166,4 +166,12 @@ mcf_data%>%
   group_by(gender)%>%
   summarize(mean_qol = mean(quality_life_8_services))
 
+mcf_data%>%
+  group_by(education_brkdwn)%>%
+  summarize(total = n()) %>%
+  ungroup()%>%
+  mutate(prop_total = round(total*100/sum(total)))
 
+mcf_data%>%
+  group_by(education_brkdwn)%>%
+  summarize(mean_qol = mean(quality_life_8_services))
