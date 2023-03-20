@@ -1,6 +1,16 @@
 require(tidyverse)
 require(haven)
 require(labelled)
+require(rio)
+
+Light_grey <- c("#F2F2F2") #Light grey for the background
+Blue <- c("#097ABC") #Blue
+Light_blue <- c("#9DC3E5") #Light blue
+Dark_blue <- c("#1b2f55") #Dark blue
+Green <- c("#8ccc98") #Green
+Dark_grey <- c("#7F7F7F") #Dark grey
+Dark_green <- c("#49711E") #Dark green
+
 mcf_data <- read_sav("data/mcf_data_master.sav")
 mcf_data1 <- mcf_data%>%
   select(inco_total,gender,education,pwd,stratum,refugee_brkdwn,
@@ -98,3 +108,62 @@ mcf_data2 <- mcf_data%>%
 model2 <- glm(quality_life_8_services~.,data = mcf_data2,family = "gaussian")
 summary(model2)
 # write_sav(mcf_data1,"data/mcf_qol.sav")
+summary(lm(quality_life_8_services~.,data = mcf_data2))
+
+view(mcf_data)
+quantile(mcf_data$quality_life_8_services)
+mean(mcf_data$quality_life_8_services)
+median(mcf_data$quality_life_8_services)
+count(mcf_data%>%filter(quality_life_8_services > median(mcf_data$quality_life_8_services)),gender)/2014
+sd(mcf_data$quality_life_8_services)
+view(mcf_data %>%
+       select(age,quality_life_8_services,weights) %>%
+       group_by(age)%>%
+       summarise(mean_qol_age = mean(quality_life_8_services)))
+
+mcf_data %>%
+  select(age,quality_life_8_services,weights) %>%
+  group_by(age)%>%
+  summarise(mean_qol_age = mean(quality_life_8_services)) %>%
+  ggplot(aes(age,mean_qol_age)) + 
+  geom_point() + 
+  geom_smooth(se = FALSE,color = Blue)+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.background = element_rect(fill = c("#F2F2F2")),
+    panel.background = element_rect(fill = c("#F2F2F2")),
+    panel.grid = element_blank(),
+    #remove x axis ticks
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    #remove y axis labels
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank()#remove y axis ticks
+  )
+mean(mcf_data$age)
+sd(mcf_data$age)
+mcf_data%>%
+  group_by(gender)%>%
+  summarize(total = n()) %>%
+  ungroup()%>%
+  mutate(prop_total = total*100/sum(total))
+
+mcf_data%>%
+  group_by(gender)%>%
+  summarize(mean_qol = mean(quality_life_8_services))
+
+mcf_data%>%
+  group_by(geo_entity)%>%
+  summarize(total = n()) %>%
+  ungroup()%>%
+  mutate(prop_total = total*100/sum(total))
+
+mcf_data%>%
+  group_by(geo_entity)%>%
+  summarize(mean_qol = mean(quality_life_8_services))
+
+mcf_data%>%
+  group_by(gender)%>%
+  summarize(mean_qol = mean(quality_life_8_services))
+
+
