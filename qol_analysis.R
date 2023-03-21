@@ -174,4 +174,64 @@ mcf_data%>%
 
 mcf_data%>%
   group_by(education_brkdwn)%>%
-  summarize(mean_qol = mean(quality_life_8_services))
+  summarize(mean_qol = mean(quality_life_8_services))%>%
+  ggplot(aes(education_brkdwn,mean_qol))+
+  geom_bar(stat = "identity",fill=Blue)+
+  geom_text(aes(label=paste0(round(mean_qol,1))),
+            vjust=-.25,
+            size = 2.25)+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.background = element_rect(fill = c("#F2F2F2")),
+    panel.background = element_rect(fill = c("#F2F2F2")),
+    panel.grid = element_blank(),
+    #remove y axis value labels
+    axis.text.y = element_blank(),
+    #remove x axis ticks
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    #remove y axis labels
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank()#remove y axis ticks
+  )
+
+mcf_data %>%
+  ggplot(aes(log10(inco_total),quality_life_8_services)) + 
+  geom_point()+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.background = element_rect(fill = c("#F2F2F2")),
+    panel.background = element_rect(fill = c("#F2F2F2")),
+    panel.grid = element_blank(),
+    #remove y axis value labels
+    #axis.text.y = element_blank(),
+    #remove x axis ticks
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    #remove y axis labels
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank()#remove y axis ticks
+  )
+
+mcf_data%>%
+  group_by(income_classes) %>%
+  summarize(mean_qol = mean(quality_life_8_services))%>%
+  ggplot(aes(reorder(factor(income_classes),inco_total),mean_qol))+
+  geom_bar(stat = "identity",fill=Blue)+
+  geom_text(aes(label=paste0(round(mean_qol,1))),
+            vjust=-.25,
+            size = 2.25)+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.background = element_rect(fill = c("#F2F2F2")),
+    panel.background = element_rect(fill = c("#F2F2F2")),
+    panel.grid = element_blank(),
+    #remove y axis value labels
+    axis.text.y = element_blank(),
+    #remove x axis ticks
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    #remove y axis labels
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank()#remove y axis ticks
+  )
