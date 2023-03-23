@@ -216,7 +216,7 @@ mcf_data %>%
 mcf_data%>%
   group_by(income_classes) %>%
   summarize(mean_qol = mean(quality_life_8_services))%>%
-  ggplot(aes(reorder(factor(income_classes),inco_total),mean_qol))+
+  ggplot(aes(factor(income_classes,level = c("","0","1-20,000","20,000-40,000","40,000-60,000","60,000-80,000","80,000-100,000","100,000-500,000","500,000-1,000,000","Above 1,000,000")),mean_qol))+
   geom_bar(stat = "identity",fill=Blue)+
   geom_text(aes(label=paste0(round(mean_qol,1))),
             vjust=-.25,
@@ -233,5 +233,45 @@ mcf_data%>%
     axis.title.y = element_blank(),
     #remove y axis labels
     axis.ticks.x = element_blank(),
-    axis.ticks.y = element_blank()#remove y axis ticks
+    axis.ticks.y = element_blank(),#remove y axis ticks
+    #rotating axis labels
+    axis.text.x = element_text(angle = 50, vjust = 1, hjust=1)
+  )
+
+mcf_data%>%
+  group_by(income_classes)%>%
+  summarize(total = n()) %>%
+  ungroup()%>%
+  mutate(prop_total = round(total*100/sum(total),2))
+
+mcf_data%>%
+  group_by(phone_ownership)%>%
+  summarize(total = n()) %>%
+  ungroup()%>%
+  mutate(prop_total = round(total*100/sum(total),2))
+
+mcf_data %>%
+  mutate(phoney = if_else(phone_ownership == 1 | phone_ownership == 2,1,0)) %>%
+  group_by(phoney) %>%
+  summarize(mean_qol = mean(quality_life_8_services))%>%
+  ggplot(aes(factor(phoney),mean_qol))+
+  geom_bar(stat = "identity",fill=Blue)+
+  geom_text(aes(label=paste0(round(mean_qol,1))),
+            vjust=-.25,
+            size = 2.25)+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.background = element_rect(fill = c("#F2F2F2")),
+    panel.background = element_rect(fill = c("#F2F2F2")),
+    panel.grid = element_blank(),
+    #remove y axis value labels
+    axis.text.y = element_blank(),
+    #remove x axis ticks
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    #remove y axis labels
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank(),#remove y axis ticks
+    #rotating axis labels
+    axis.text.x = element_text(angle = 50, vjust = 1, hjust=1)
   )
