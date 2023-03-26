@@ -372,3 +372,34 @@ mcf_data %>%
     axis.text.x = element_text(angle = 50, vjust = 1, hjust=1)
   )
                  
+#Education Knowledge (education related work opportunities)
+mcf_data%>%
+  group_by(educ_knowledge)%>%
+  summarize(total = n()) %>%
+  ungroup()%>%
+  mutate(prop_total = round(total*100/sum(total),2))
+
+characterize(mcf_data) %>%
+  group_by(educ_knowledge) %>%
+  summarize(mean_qol = mean(quality_life_8_services))%>%
+  ggplot(aes(factor(educ_knowledge),mean_qol))+
+  geom_bar(stat = "identity",fill=Blue)+
+  geom_text(aes(label=paste0(round(mean_qol,1))),
+            vjust=-.25,
+            size = 2.25)+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.background = element_rect(fill = c("#F2F2F2")),
+    panel.background = element_rect(fill = c("#F2F2F2")),
+    panel.grid = element_blank(),
+    #remove y axis value labels
+    axis.text.y = element_blank(),
+    #remove x axis ticks
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    #remove y axis labels
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank(),#remove y axis ticks
+    #rotating axis labels
+    axis.text.x = element_text(angle = 50, vjust = 1, hjust=1)
+  )
