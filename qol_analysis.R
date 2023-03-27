@@ -596,3 +596,10 @@ characterize(mcf_data) %>%
     #rotating axis labels
     axis.text.x = element_text(angle = 50, vjust = 1, hjust=1)
   )
+
+characterize(mcf_data) %>%
+  group_by(wek_howork) %>%
+  summarize(mean_qol = mean(quality_life_8_services))%>%
+  ggplot(aes(as.integer(wek_howork)))+
+  geom_histogram(fill=Blue,binwidth = 40)
+
