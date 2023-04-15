@@ -671,14 +671,14 @@ characterize(mcf_data) %>%
 
 #individual needs
 view(characterize(mcf_data)%>%
-       group_by(stratum)%>%
+       group_by(indi_need)%>%
        summarize(total = n()) %>%
        ungroup()%>%
        mutate(prop_total = round(total*100/sum(total),2)) %>%
        print(n=888))
 
 characterize(mcf_data) %>%
-  group_by(stratum) %>%
+  group_by(indi_need) %>%
   summarize(mean_qol = mean(quality_life_8_services))%>%
   ggplot(aes(factor(stratum),mean_qol))+
   geom_bar(stat = "identity",fill=Blue)+
