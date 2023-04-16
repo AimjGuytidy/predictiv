@@ -767,3 +767,32 @@ characterize(mcf_data) %>%
     #rotating axis labels
     axis.text.x = element_text(angle = 50, vjust = 1, hjust=1)
   )
+
+#language skills
+view(characterize(mcf_data)%>%
+       group_by(language_1)%>%
+       summarize(total = n()) %>%
+       ungroup()%>%
+       mutate(prop_total = round(total*100/sum(total),2)) %>%
+       print(n=888))
+view(characterize(mcf_data)%>%
+       group_by(language_2)%>%
+       summarize(total = n()) %>%
+       ungroup()%>%
+       mutate(prop_total = round(total*100/sum(total),2)) %>%
+       print(n=888))
+view(characterize(mcf_data)%>%
+       group_by(language_3)%>%
+       summarize(total = n()) %>%
+       ungroup()%>%
+       mutate(prop_total = round(total*100/sum(total),2)) %>%
+       print(n=888))
+characterize(mcf_data) %>%
+  group_by(language_1) %>%
+  summarize(mean_qol = mean(quality_life_8_services))
+characterize(mcf_data) %>%
+  group_by(language_2) %>%
+  summarize(mean_qol = mean(quality_life_8_services))
+characterize(mcf_data) %>%
+  group_by(language_3) %>%
+  summarize(mean_qol = mean(quality_life_8_services))
