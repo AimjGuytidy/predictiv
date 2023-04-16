@@ -808,3 +808,17 @@ view(characterize(mcf_data)%>%
 characterize(mcf_data) %>%
   group_by(educ_quality) %>%
   summarize(mean_qol = mean(quality_life_8_services))
+
+#trainings attended
+view(characterize(mcf_data)%>%
+       mutate(trainings_status = ifelse(trainings == "0","No trainings","trained"))%>%
+       group_by(trainings_status)%>%
+       summarize(total = n()) %>%
+       ungroup()%>%
+       mutate(prop_total = round(total*100/sum(total),2)) %>%
+       print(n=888))
+
+characterize(mcf_data)%>%
+  mutate(trainings_status = ifelse(trainings == "0","No trainings","trained"))%>%
+  group_by(trainings_status)%>%
+  summarize(mean_qol = mean(quality_life_8_services))
