@@ -796,3 +796,15 @@ characterize(mcf_data) %>%
 characterize(mcf_data) %>%
   group_by(language_3) %>%
   summarize(mean_qol = mean(quality_life_8_services))
+
+#quality of education
+view(characterize(mcf_data)%>%
+       group_by(educ_quality)%>%
+       summarize(total = n()) %>%
+       ungroup()%>%
+       mutate(prop_total = round(total*100/sum(total),2)) %>%
+       print(n=888))
+
+characterize(mcf_data) %>%
+  group_by(educ_quality) %>%
+  summarize(mean_qol = mean(quality_life_8_services))
