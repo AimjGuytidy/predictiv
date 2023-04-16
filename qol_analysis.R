@@ -1,7 +1,29 @@
+remove.packages("cli")
+remove.packages("usethis")
+remove.packages("tidyverse")
+remove.packages("htmltools")
+install.packages("usethis") 
+install.packages("cli")
+install.packages("tidyverse")
+install.packages("htmltools")
+update.packages("Rtools")
+update.packages("devtools")
 require(tidyverse)
 require(haven)
 require(labelled)
 require(rio)
+require(knitr)
+library(devtools)
+#install_github("dgrtwo/broom")
+require(broom)
+require(officer)
+require(magrittr)
+require(flextable)
+require(rvg)
+#install.packages("mschart")
+#require(mschart)
+#devtools::install_github('davidgohel/ReporteRs')
+
 
 Light_grey <- c("#F2F2F2") #Light grey for the background
 Blue <- c("#097ABC") #Blue
@@ -12,23 +34,45 @@ Dark_grey <- c("#7F7F7F") #Dark grey
 Dark_green <- c("#49711E") #Dark green
 
 mcf_data <- read_sav("data/mcf_data_master.sav")
-mcf_data1 <- mcf_data%>%
-  select(inco_total,gender,education,pwd,stratum,refugee_brkdwn,
+mcf_data1 <- characterize(mcf_data)%>%
+  dplyr::select(inco_total,gender,education,pwd,stratum,refugee_brkdwn,
          computer_ownership,phone_ownership,mart_status,age,hh_gender,
-         own_farming,mastcard_progr,matches("^language_[0-9]+$"),educ_quality,
+         own_farming,mastcard_progr,language_1,language_2,educ_quality,
          educ_knowledge,ownasset_1,equiment_1,
          equiment_7,have_electricity,inc_genjob,wek_howork,main_sector,sust_wage,
          sust_self_employment,indi_need,fami_need,sense_purp,shocks,how_parti,
          remi_receive,com_pers,gotten_friend,attend_church,two_views,otherviews,
          will_happen,plan_ahead,life_control,determine,worked_hard,my_actions,
-         quality_life_8_services,-language_3,trainings_0,trainings_1,trainings_6)%>%
-  mutate_at(
+         quality_life_8_services,trainings_0,trainings_1,trainings_6)%>%
+  dplyr::mutate_at(
     vars(-c("inco_total","age","quality_life_8_services","wek_howork","gotten_friend","attend_church")),
             as.factor)%>%
-  mutate_at(vars(c("inco_total","age","wek_howork","gotten_friend","attend_church")),as.integer)
+  dplyr::mutate_at(vars(c("inco_total","age","wek_howork","gotten_friend","attend_church")),as.integer)
 
 model1 <- glm(quality_life_8_services~.,data = mcf_data1,family = "gaussian")
 summary(model1)
+model1_table <- tidy(model1)
+ftab <- flextable(model1_table)
+ftab <- colformat_double(
+  x = ftab,
+  big.mark = ",", digits = 2, na_str = "N/A"
+)
+
+ftab <- autofit(ftab)
+std_border <- fp_border(color="gray")
+ftab <- border_remove(x = ftab)
+ftab <- hline(ftab, part="all", border = std_border )
+std_borderv <- fp_border(color="gray")
+ftab <- vline(ftab, border = std_borderv )
+ftab <- border(ftab, border = fp_border(color = "grey"))
+ftab <- border(ftab, border = fp_border(color = "grey"),part = "header")
+ftab <- fontsize(ftab, size = 7, part = "header")
+ftab <- fontsize(ftab, size = 6.5, part = "body")
+
+doc <- read_docx(path = "data/temp.docx")
+doc <- body_add_flextable(doc,ftab)
+print(doc,target ="data/temp.docx")
+
 
 ggplot(data=NULL,aes(predict(model1),residuals(model1)))+
   geom_point()+
@@ -821,4 +865,16 @@ view(characterize(mcf_data)%>%
 characterize(mcf_data)%>%
   mutate(trainings_status = ifelse(trainings == "0","No trainings","trained"))%>%
   group_by(trainings_status)%>%
+  summarize(mean_qol = mean(quality_life_8_services))
+
+#sense of purpose
+view(characterize(mcf_data)%>%
+       group_by(sense_purp)%>%
+       summarize(total = n()) %>%
+       ungroup()%>%
+       mutate(prop_total = round(total*100/sum(total),2)) %>%
+       print(n=888))
+
+characterize(mcf_data) %>%
+  group_by(sense_purp) %>%
   summarize(mean_qol = mean(quality_life_8_services))
