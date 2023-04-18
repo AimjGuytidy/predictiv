@@ -49,8 +49,12 @@ mcf_data1 <- characterize(mcf_data)%>%
             as.factor)%>%
   dplyr::mutate_at(vars(c("inco_total","age","wek_howork","gotten_friend","attend_church")),as.integer)
 
+mcf_data2 <- mcf_data1 %>%
+  mutate(quality_life_8_services = log(quality_life_8_services))
+mcf_data2 <- do.call(data.frame,lapply(mcf_data2,function(x) replace(x,is.infinite(x),NA)))
 model1 <- glm(quality_life_8_services~.,data = mcf_data1,family = "gaussian")
 summary(model1)
+# convert the model output into table that can be export to word 
 model1_table <- tidy(model1)
 ftab <- flextable(model1_table)
 ftab <- colformat_double(
@@ -72,6 +76,11 @@ ftab <- fontsize(ftab, size = 6.5, part = "body")
 doc <- read_docx(path = "data/temp.docx")
 doc <- body_add_flextable(doc,ftab)
 print(doc,target ="data/temp.docx")
+
+# using sink to preserve results in txt format
+sink("data/lm.txt")
+print(summary(model1))
+sink() 
 
 
 ggplot(data=NULL,aes(predict(model1),residuals(model1)))+
@@ -164,6 +173,23 @@ view(mcf_data %>%
        select(age,quality_life_8_services,weights) %>%
        group_by(age)%>%
        summarise(mean_qol_age = mean(quality_life_8_services)))
+
+#data visualization of selected variables
+mcf_data %>%
+  ggplot(aes(log(quality_life_8_services)))+
+  geom_histogram(aes(y = after_stat(count)*100/sum(after_stat(count))),fill=Light_blue)+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.background = element_rect(fill = c("#F2F2F2")),
+    panel.background = element_rect(fill = c("#F2F2F2")),
+    panel.grid = element_blank(),
+    #remove x axis ticks
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    #remove y axis labels
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank()#remove y axis ticks
+  ) 
 
 mcf_data %>%
   select(age,quality_life_8_services,weights) %>%
