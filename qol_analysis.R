@@ -116,7 +116,7 @@ summary(
   lm(
     quality_life_8_services ~ . - language_0 - sust_wage - indi_need - 
       sust_self_employment,
-    data = mcf_data_char
+    data = mcf_data_chara
   )
 )
 vif(
@@ -176,7 +176,7 @@ view(mcf_data %>%
 
 #data visualization of selected variables
 mcf_data %>%
-  ggplot(aes(log(quality_life_8_services)))+
+  ggplot(aes(quality_life_8_services))+
   geom_histogram(aes(y = after_stat(count)*100/sum(after_stat(count))),fill=Light_blue)+
   theme(plot.title = element_text(hjust = 0.5)) +
   theme(
@@ -904,3 +904,121 @@ view(characterize(mcf_data)%>%
 characterize(mcf_data) %>%
   group_by(sense_purp) %>%
   summarize(mean_qol = mean(quality_life_8_services))
+
+# shocks
+view(characterize(mcf_data)%>%
+       group_by(shocks)%>%
+       summarize(total = n()) %>%
+       ungroup()%>%
+       mutate(prop_total = round(total*100/sum(total),2)) %>%
+       print(n=888))
+
+characterize(mcf_data) %>%
+  group_by(shocks) %>%
+  summarize(mean_qol = mean(quality_life_8_services))
+
+# level of participation
+view(characterize(mcf_data)%>%
+       group_by(how_parti)%>%
+       summarize(total = n()) %>%
+       ungroup()%>%
+       mutate(prop_total = round(total*100/sum(total),2)) %>%
+       print(n=888))
+
+characterize(mcf_data) %>%
+  group_by(how_parti) %>%
+  summarize(mean_qol = mean(quality_life_8_services))
+
+# remittance reception
+view(characterize(mcf_data)%>%
+       group_by(remi_receive)%>%
+       summarize(total = n()) %>%
+       ungroup()%>%
+       mutate(prop_total = round(total*100/sum(total),2)) %>%
+       print(n=888))
+
+characterize(mcf_data) %>%
+  group_by(remi_receive) %>%
+  summarize(mean_qol = mean(quality_life_8_services))
+
+# communication status
+view(characterize(mcf_data)%>%
+       group_by(com_pers)%>%
+       summarize(total = n()) %>%
+       ungroup()%>%
+       mutate(prop_total = round(total*100/sum(total),2)) %>%
+       print(n=888))
+
+characterize(mcf_data) %>%
+  group_by(com_pers) %>%
+  summarize(mean_qol = mean(quality_life_8_services))
+
+# friendship status
+join_main<- mcf_data%>%
+       group_by(gotten_friend)%>%
+       summarize(total = n()) %>%
+       ungroup()%>%
+       mutate(prop_total = round(total*100/sum(total),2)) %>%
+       select(gotten_friend,prop_total)
+       
+
+join_sec<-mcf_data %>%
+  group_by(gotten_friend) %>%
+  summarize(mean_qol = mean(quality_life_8_services)) %>%
+  ungroup() %>% 
+  left_join(join_main, by = "gotten_friend")
+ftab <- flextable(join_sec)
+ftab <- colformat_double(
+  x = ftab,
+  big.mark = ",", digits = 2, na_str = "N/A"
+)
+
+ftab <- autofit(ftab)
+std_border <- fp_border(color="gray")
+ftab <- border_remove(x = ftab)
+ftab <- hline(ftab, part="all", border = std_border )
+std_borderv <- fp_border(color="gray")
+ftab <- vline(ftab, border = std_borderv )
+ftab <- border(ftab, border = fp_border(color = "grey"))
+ftab <- border(ftab, border = fp_border(color = "grey"),part = "header")
+ftab <- fontsize(ftab, size = 7, part = "header")
+ftab <- fontsize(ftab, size = 6.5, part = "body")
+
+doc <- read_docx(path = "data/temp.docx")
+doc <- body_add_flextable(doc,ftab)
+print(doc,target ="data/temp.docx")
+
+# church attendance
+join_main<- mcf_data%>%
+  group_by(attend_church)%>%
+  summarize(total = n()) %>%
+  ungroup()%>%
+  mutate(prop_total = round(total*100/sum(total),2)) %>%
+  select(attend_church,prop_total)
+
+
+join_sec<-mcf_data %>%
+  group_by(attend_church) %>%
+  summarize(mean_qol = mean(quality_life_8_services)) %>%
+  ungroup() %>% 
+  left_join(join_main, by = "attend_church")
+ftab <- flextable(join_sec)
+ftab <- colformat_double(
+  x = ftab,
+  big.mark = ",", digits = 2, na_str = "N/A"
+)
+
+ftab <- autofit(ftab)
+std_border <- fp_border(color="gray")
+ftab <- border_remove(x = ftab)
+ftab <- hline(ftab, part="all", border = std_border )
+std_borderv <- fp_border(color="gray")
+ftab <- vline(ftab, border = std_borderv )
+ftab <- border(ftab, border = fp_border(color = "grey"))
+ftab <- border(ftab, border = fp_border(color = "grey"),part = "header")
+ftab <- fontsize(ftab, size = 7, part = "header")
+ftab <- fontsize(ftab, size = 6.5, part = "body")
+
+doc <- read_docx(path = "data/temp.docx")
+doc <- body_add_flextable(doc,ftab)
+print(doc,target ="data/temp.docx")
