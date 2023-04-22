@@ -1034,3 +1034,39 @@ view(characterize(mcf_data)%>%
 characterize(mcf_data) %>%
   group_by(two_views) %>%
   summarize(mean_qol = mean(quality_life_8_services))
+
+# other views
+view(characterize(mcf_data)%>%
+       group_by(otherviews)%>%
+       summarize(total = n()) %>%
+       ungroup()%>%
+       mutate(prop_total = round(total*100/sum(total),2)) %>%
+       print(n=888))
+
+characterize(mcf_data) %>%
+  group_by(otherviews) %>%
+  summarize(mean_qol = mean(quality_life_8_services))
+
+# fate beliefs
+view(characterize(mcf_data)%>%
+       group_by(will_happen)%>%
+       summarize(total = n()) %>%
+       ungroup()%>%
+       mutate(prop_total = round(total*100/sum(total),2)) %>%
+       print(n=888))
+
+characterize(mcf_data) %>%
+  group_by(will_happen) %>%
+  summarize(mean_qol = mean(quality_life_8_services))
+
+# plan ahead
+view(characterize(mcf_data)%>%
+       group_by(plan_ahead)%>%
+       summarize(total = n()) %>%
+       ungroup()%>%
+       mutate(prop_total = round(total*100/sum(total),2)) %>%
+       print(n=888))
+
+characterize(mcf_data) %>%
+  group_by(plan_ahead) %>%
+  summarize(mean_qol = mean(quality_life_8_services))
