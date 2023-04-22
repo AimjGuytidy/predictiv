@@ -13,7 +13,7 @@ require(haven)
 require(labelled)
 require(rio)
 require(knitr)
-library(devtools)
+#library(devtools)
 #install_github("dgrtwo/broom")
 require(broom)
 require(officer)
@@ -1022,3 +1022,15 @@ ftab <- fontsize(ftab, size = 6.5, part = "body")
 doc <- read_docx(path = "data/temp.docx")
 doc <- body_add_flextable(doc,ftab)
 print(doc,target ="data/temp.docx")
+
+# views
+view(characterize(mcf_data)%>%
+       group_by(two_views)%>%
+       summarize(total = n()) %>%
+       ungroup()%>%
+       mutate(prop_total = round(total*100/sum(total),2)) %>%
+       print(n=888))
+
+characterize(mcf_data) %>%
+  group_by(two_views) %>%
+  summarize(mean_qol = mean(quality_life_8_services))
