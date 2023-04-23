@@ -1377,3 +1377,65 @@ view(
 characterize(mcf_data) %>%
   group_by(worked_hard) %>%
   summarize(mean_qol = mean(quality_life_8_services))
+
+# church attendance
+join_main <- mcf_data %>%
+  group_by(wek_howork) %>%
+  summarize(total = n()) %>%
+  ungroup() %>%
+  mutate(prop_total = round(total * 100 / sum(total), 2)) %>%
+  select(wek_howork, prop_total)
+
+
+join_sec <- mcf_data %>%
+  group_by(wek_howork) %>%
+  summarize(mean_qol = mean(quality_life_8_services)) %>%
+  ungroup() %>%
+  left_join(join_main, by = "wek_howork")
+
+join_sec %>%
+  ggplot(aes(mean_qol)) +
+  geom_histogram(aes(y = after_stat(count) * 100 / sum(after_stat(count))), fill =
+                   Light_blue) +
+  xlim(c(0,50))+
+  ylim(c(0,30))+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.background = element_rect(fill = c("#F2F2F2")),
+    panel.background = element_rect(fill = c("#F2F2F2")),
+    panel.grid = element_blank(),
+    #remove x axis ticks
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    #remove y axis labels
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank()#remove y axis ticks
+  )
+
+join_sec %>%
+  ggplot(mapping = aes(x = wek_howork,y = mean_qol)) +
+  geom_bar(fill =Light_blue,stat = "identity") +
+  xlim(c(0,180))+
+  ylim(c(0,50))+
+  xlab("Hours worked per week")+
+  ylab("Average QLI")+
+  labs(title = "Distribution of average QLI per weekly hours worked")+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.background = element_rect(fill = c("#F2F2F2")),
+    panel.background = element_rect(fill = c("#F2F2F2")),
+    panel.grid = element_blank(),
+    #remove x axis ticks
+    # axis.title.x = element_blank(),
+    # axis.title.y = element_blank(),
+    #remove y axis labels
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank()#remove y axis ticks
+  )
+
+
+# use of point biserial correlation for dichotomous variable and cont. variable
+mcf_data %>%
+  ggplot(aes(x = quality_life_8_services,y = geo_entity))+
+  geom_point() + coord_flip()
+cor.test(mcf_data$quality_life_8_services,mcf_data$geo_entity)
