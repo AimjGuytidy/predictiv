@@ -1439,3 +1439,17 @@ mcf_data %>%
   ggplot(aes(x = quality_life_8_services,y = geo_entity))+
   geom_point() + coord_flip()
 cor.test(mcf_data$quality_life_8_services,mcf_data$geo_entity)
+
+mcf_data %>%
+  ggplot(aes(y = quality_life_8_services,x = as.factor(geo_entity)))+
+  geom_boxplot()
+
+characterize(mcf_data) %>%
+  ggplot(aes(y = quality_life_8_services,x = as.factor(worked_hard)))+
+  geom_boxplot() + 
+  coord_flip()
+
+characterize(mcf_data) %>%
+  ggplot(aes(y = quality_life_8_services,x = as.factor(determine)))+
+  geom_boxplot() + 
+  coord_flip()
