@@ -129,3 +129,12 @@ educ[1:10,]%>%
   )
 
 #write_xlsx(educ,"data/educ_status.xlsx")
+
+# employability rate
+employability_rate <- count(filter(lfs,(B05B == 3410 | B05B == 3421) & B03 == 6),
+      status1,B05B,wt = weight2) %>%
+  characterize()%>%
+  ungroup()%>%
+  pivot_wider(names_from = B05B,values_from = n)
+
+#write_xlsx(employability_rate,"data/employability_rate.xlsx")
