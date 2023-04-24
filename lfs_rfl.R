@@ -105,6 +105,27 @@ write_xlsx(emp,"data/employ_status.xlsx")
 
 educ <- count(characterize(lfs_finance),B05C,wt = weight2)%>%
   rename(setNames("B05C", var_label(lfs$B05C))[1],Frequency=n)%>%
-  mutate(Frequency_percentage = Frequency * 100/sum(Frequency),
-         `ESCED name` = replace(`ESCED name`, which(`ESCED name`==""), "Not available"))
+  mutate(Frequency_percentage = round(Frequency * 100/sum(Frequency),2),
+         `ESCED name` = 
+           replace(`ESCED name`, which(`ESCED name`==""), "Not available")) %>%
+  arrange(desc(Frequency_percentage))
 
+educ[1:10,]%>%
+  ggplot() +
+  geom_bar(aes(y = Frequency_percentage,
+               x=reorder(`ESCED name`,Frequency_percentage)),stat="identity") +
+  coord_flip() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.background = element_rect(fill = c("#F2F2F2")),
+    panel.background = element_rect(fill = c("#F2F2F2")),
+    panel.grid = element_blank(),
+    #remove x axis ticks
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    #remove y axis labels
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank()#remove y axis ticks
+  )
+
+#write_xlsx(educ,"data/educ_status.xlsx")
