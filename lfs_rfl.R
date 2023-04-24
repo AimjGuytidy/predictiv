@@ -100,3 +100,11 @@ ftab <- fontsize(ftab, size = 7, part = "header")
 ftab <- fontsize(ftab, size = 6.5, part = "body")
 
 write_xlsx(emp,"data/employ_status.xlsx")
+
+#### financial sector employment by education status
+
+educ <- count(characterize(lfs_finance),B05C,wt = weight2)%>%
+  rename(setNames("B05C", var_label(lfs$B05C))[1],Frequency=n)%>%
+  mutate(Frequency_percentage = Frequency * 100/sum(Frequency),
+         `ESCED name` = replace(`ESCED name`, which(`ESCED name`==""), "Not available"))
+
