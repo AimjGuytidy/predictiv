@@ -38,7 +38,7 @@ mcf_data1 <- characterize(mcf_data) %>%
   dplyr::select(
     inco_total,
     gender,
-    education,
+    education_brkdwn,
     pwd,
     stratum,
     refugee_brkdwn,
@@ -146,163 +146,6 @@ sink("data/lm.txt")
 print(summary(model1))
 sink()
 
-
-ggplot(data = NULL, aes(predict(model1), residuals(model1))) +
-  geom_point() +
-  geom_smooth()
-
-ggplot(data = NULL, aes(seq(1, length(hatvalues(
-  model1
-))), hatvalues(model1))) +
-  geom_point()
-
-which.max(hatvalues(model1))
-
-#####################################
-mcf_data_char <- characterize(mcf_data) %>%
-  dplyr::select(
-    inco_total,
-    gender,
-    education,
-    pwd,
-    stratum,
-    refugee_brkdwn,
-    computer_ownership,
-    phone_ownership,
-    mart_status,
-    age,
-    hh_gender,
-    own_farming,
-    mastcard_progr,
-    matches("^language_[0-9]+$"),
-    educ_quality,
-    educ_knowledge,
-    ownasset_1,
-    equiment_1,
-    equiment_7,
-    have_electricity,
-    inc_genjob,
-    wek_howork,
-    main_sector,
-    sust_wage,
-    sust_self_employment,
-    indi_need,
-    fami_need,
-    sense_purp,
-    shocks,
-    how_parti,
-    remi_receive,
-    com_pers,
-    gotten_friend,
-    attend_church,
-    two_views,
-    otherviews,
-    will_happen,
-    plan_ahead,
-    life_control,
-    determine,
-    worked_hard,
-    my_actions,
-    quality_life_8_services,
-    trainings_0,
-    trainings_1,
-    trainings_6
-  ) %>%
-  mutate_at(vars(
-    -c(
-      "inco_total",
-      "age",
-      "quality_life_8_services",
-      "wek_howork",
-      "gotten_friend",
-      "attend_church"
-    )
-  ),
-  as.factor) %>%
-  mutate_at(vars(
-    c(
-      "inco_total",
-      "age",
-      "wek_howork",
-      "gotten_friend",
-      "attend_church"
-    )
-  ), as.integer)
-
-
-modelchar <- lm(quality_life_8_services ~ ., data = mcf_data_char)
-summary(modelchar)
-vif(modelchar)
-summary(
-  lm(
-    quality_life_8_services ~ . - language_0 - sust_wage - indi_need -
-      sust_self_employment,
-    data = mcf_data_chara
-  )
-)
-vif(
-  lm(
-    quality_life_8_services ~ . - language_0 - sust_wage - indi_need -
-      sust_self_employment,
-    data = mcf_data_char
-  )
-)
-
-modelchar1 <-
-  lm(
-    quality_life_8_services ~ . - language_0 - sust_wage - indi_need -
-      sust_self_employment - education,
-    data = mcf_data_char
-  )
-summary(modelchar1)
-vif(modelchar1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-mcf_data2 <- mcf_data %>%
-  select(gender,
-         education_brkdwn,
-         remi_receive,
-         fami_need,
-         quality_life_8_services) %>%
-  mutate_at(vars(-c("quality_life_8_services")),
-            as.factor)
-
-model2 <-
-  glm(quality_life_8_services ~ .,
-      data = mcf_data2,
-      family = "gaussian")
-summary(model2)
-# write_sav(mcf_data1,"data/mcf_qol.sav")
-summary(lm(quality_life_8_services ~ ., data = mcf_data2))
-
-view(mcf_data)
-quantile(mcf_data$quality_life_8_services)
-mean(mcf_data$quality_life_8_services)
-median(mcf_data$quality_life_8_services)
-count(mcf_data %>% filter(
-  quality_life_8_services > median(mcf_data$quality_life_8_services)
-), gender) / 2014
-sd(mcf_data$quality_life_8_services)
-view(
-  mcf_data %>%
-    select(age, quality_life_8_services, weights) %>%
-    group_by(age) %>%
-    summarise(mean_qol_age = mean(quality_life_8_services))
-)
 
 #data visualization of selected variables
 mcf_data %>%
@@ -1453,3 +1296,130 @@ characterize(mcf_data) %>%
   ggplot(aes(y = quality_life_8_services,x = as.factor(determine)))+
   geom_boxplot() + 
   coord_flip()
+
+# Model creation and analysis
+mcf_data1 <- mcf_data %>%
+  dplyr::select(
+    inco_total,
+    gender,
+    education_brkdwn,
+    pwd,
+    stratum,
+    refugee_brkdwn,
+    computer_ownership,
+    phone_ownership,
+    mart_status,
+    age,
+    hh_gender,
+    own_farming,
+    mastcard_progr,
+    language_1,
+    language_2,
+    educ_quality,
+    educ_knowledge,
+    ownasset_1,
+    equiment_1,
+    equiment_7,
+    have_electricity,
+    inc_genjob,
+    wek_howork,
+    main_sector,
+    sust_wage,
+    sust_self_employment,
+    indi_need,
+    fami_need,
+    sense_purp,
+    shocks,
+    how_parti,
+    remi_receive,
+    com_pers,
+    gotten_friend,
+    attend_church,
+    two_views,
+    otherviews,
+    will_happen,
+    plan_ahead,
+    life_control,
+    determine,
+    worked_hard,
+    my_actions,
+    quality_life_8_services,
+    trainings_0,
+    trainings_1,
+    trainings_6
+  )
+
+mcf_data2 <- mcf_data1 %>%
+  mutate(mart_status = if_else(mart_status == 6,1,0,missing=NA),
+         stratum = case_when(stratum == "Non-employed"~1,
+                             stratum == "Student"~2,
+                             stratum == "Self-employed"~3,
+                             stratum == "Wage-employed"~4),
+         own_farming = if_else(own_farming==0,1,0,missing=NA),
+         computer_ownership = if_else(computer_ownership ==4,1,0,missing=NA),
+         inco_total = log(inco_total))%>%
+  characterize()%>%
+  mutate_at(c("my_actions","worked_hard","determine","life_control","plan_ahead",
+              "will_happen","indi_need","fami_need","sense_purp"),as.character)%>%
+  mutate(across(c(my_actions,worked_hard,determine,life_control,plan_ahead,
+                  will_happen),~case_when(.=="a. Disagree"~-2,
+                                           .=="b. Slightly disagree"~-1,
+                                           .=="c. Slightly agree"~1,
+                                           .=="d. Agree"~2,
+                                           .=="e. Strongly agree"~3,
+                                           TRUE~NA_real_)))%>%
+  mutate(across(c(indi_need,fami_need,sense_purp),~case_when(
+                    .=="a. Strongly disagree"~-2,
+                    .=="b. Disagree"~-1,
+                    .=="c. Neutral"~0,
+                    .=="d. Agree"~1,
+                    .=="e. Strongly Agree"~2,
+                    TRUE~NA_real_
+                  )))
+mcf_data2 <-
+  do.call(data.frame, lapply(mcf_data2, function(x)
+    replace(x, is.infinite(x), NA)))
+model1 <-
+  glm(quality_life_8_services ~ .,
+      data = mcf_data2,
+      family = "gaussian")
+summary(model1)
+
+mcf_data3 <- mcf_data1 %>%
+  mutate(mart_status = if_else(mart_status == 6,1,0,missing=NA),
+         stratum = case_when(stratum == "Non-employed"~1,
+                             stratum == "Student"~2,
+                             stratum == "Self-employed"~3,
+                             stratum == "Wage-employed"~4),
+         own_farming = if_else(own_farming==0,1,0,missing=NA),
+         computer_ownership = if_else(computer_ownership ==4,1,0,missing=NA),
+         inco_total = log(inco_total),
+         education_brkdwn = case_when(education_brkdwn=="None"~0,
+                                      education_brkdwn=="Primary"~1,
+                                      education_brkdwn=="Secondary"~2,
+                                      education_brkdwn=="TVET"~3,
+                                      education_brkdwn=="University" ~4,
+                                      TRUE~NA_real_))%>%
+  mutate(across(c(my_actions,worked_hard,determine,life_control,plan_ahead,
+                  will_happen),~case_when(.==1~-2,
+                                          .==2~-1,
+                                          .==3~1,
+                                          .==4~2,
+                                          .==5~3,
+                                          TRUE~NA_real_)))%>%
+  mutate(across(c(indi_need,fami_need,sense_purp),~case_when(
+    .==1~-2,
+    .==2~-1,
+    .==3~0,
+    .==4~1,
+    .==5~2,
+    TRUE~NA_real_
+  )))
+mcf_data3 <-
+  do.call(data.frame, lapply(mcf_data3, function(x)
+    replace(x, is.infinite(x), NA)))
+model1 <-
+  glm(quality_life_8_services ~ .,
+      data = mcf_data3,
+      family = "gaussian")
+summary(model1)
