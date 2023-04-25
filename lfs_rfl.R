@@ -138,3 +138,14 @@ employability_rate <- count(filter(lfs,(B05B == 3410 | B05B == 3421) & B03 == 6)
   pivot_wider(names_from = B05B,values_from = n)
 
 #write_xlsx(employability_rate,"data/employability_rate.xlsx")
+
+# income levels
+lfs_income <- read_dta("data/lfs_data.dta")
+var_label(lfs_income$indd01)
+val_labels(lfs_income$indd03)
+
+income_level <- count(characterize(filter(lfs_income,indd03==11)),D17_more,wt=weight2) %>%
+  ungroup() %>%
+  rename(Income_level = D17_more,Frequency = n)
+view(income_level)
+#write_xlsx(income_level,"data/income_level.xlsx")
