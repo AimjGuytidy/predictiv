@@ -1423,3 +1423,57 @@ model1 <-
       data = mcf_data3,
       family = "gaussian")
 summary(model1)
+
+mcf_data4 <- mcf_data3 %>%
+  select(-trainings_1,-plan_ahead,-attend_church,-sust_self_employment,-main_sector,-sust_wage)
+model1 <-
+  glm(quality_life_8_services ~ .,
+      data = mcf_data4,
+      family = "gaussian")
+summary(model1)
+
+mcf_data5 <- mcf_data4 %>%
+  select(-stratum,-language_2,-determine,-worked_hard,-educ_quality)
+model1 <-
+  glm(quality_life_8_services ~ .,
+      data = mcf_data5,
+      family = "gaussian")
+summary(model1)
+
+mcf_data6 <- mcf_data5 %>%
+  select(-inc_genjob,-two_views,-refugee_brkdwn)
+model1 <-
+  glm(quality_life_8_services ~ .,
+      data = mcf_data6,
+      family = "gaussian")
+summary(model1)
+
+mcf_data7 <- mcf_data6 %>%
+  select(-otherviews,-will_happen,-trainings_0,-ownasset_1,-language_1,-hh_gender,-phone_ownership)
+model1 <-
+  glm(quality_life_8_services ~ .,
+      data = mcf_data7,
+      family = "gaussian")
+summary(model1)
+
+mcf_data8 <- mcf_data7 %>%
+  select(-life_control,-how_parti,-equiment_1)
+model1 <-
+  glm(quality_life_8_services ~ .,
+      data = mcf_data8,
+      family = "gaussian")
+summary(model1)
+
+mcf_data9 <- mcf_data8 %>%
+  select(-my_actions,-com_pers,-mastcard_progr)
+model1 <-
+  glm(quality_life_8_services ~ .,
+      data = mcf_data9,
+      family = "gaussian")
+summary(model1)
+
+model3 <-
+  glm(quality_life_8_services ~ .+ (gender*mart_status) + (gender * remi_receive),
+      data = mcf_data9,
+      family = "gaussian")
+summary(model3)
