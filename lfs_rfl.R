@@ -144,8 +144,8 @@ lfs_income <- read_dta("data/lfs_data.dta")
 var_label(lfs_income$indd01)
 val_labels(lfs_income$indd03)
 
-income_level <- count(characterize(filter(lfs_income,indd03==11)),D17_more,wt=weight2) %>%
+income_level_finance <- count(characterize(filter(lfs_income,indd03==11 & A04>=16)),D17_more,wt=weight2) %>%
   ungroup() %>%
   rename(Income_level = D17_more,Frequency = n)
-view(income_level)
-#write_xlsx(income_level,"data/income_level.xlsx")
+view(income_level_finance)
+#write_xlsx(income_level_finance,"data/income_level_finance.xlsx")
