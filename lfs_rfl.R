@@ -149,3 +149,36 @@ income_level_finance <- count(characterize(filter(lfs_income,indd03==11 & A04>=1
   rename(Income_level = D17_more,Frequency = n)
 view(income_level_finance)
 #write_xlsx(income_level_finance,"data/income_level_finance.xlsx")
+#write_excel_csv(income_level_finance,"data/income_level_finance.csv")
+
+# people who studied finance placement
+
+count(characterize(filter(lfs_income,(B03 >=6 & B03 <= 9) & 
+                            (B05B == 3111 | B05B == 3112 | B05B == 3410 | 
+                               B05B == 3412 | B05B == 3411 | B05B == 3423 | 
+                               B05B == 3426 | B05B == 3421)
+)),indd03, B03,wt=weight2) %>%
+  pivot_wider(names_from = B03,values_from = n)
+
+isic_isced <- count(characterize(filter(lfs_income,(B03 >=6 & B03 <= 9) & 
+                            (B05B == 3111 | B05B == 3112 | B05B == 3410 | 
+                               B05B == 3412 | B05B == 3411 | B05B == 3423 | 
+                               B05B == 3426 | B05B == 3421) & status1 == 1 & A04 >= 16
+)),indd03, B03,wt=weight2) %>%
+  pivot_wider(names_from = B03,values_from = n)
+isic_isced <- isic_isced %>%
+  mutate(Total = rowSums(isic_isced[,c(2,3,4)],na.rm = TRUE))
+#write_excel_csv(isic_isced,"data/finance_education_sector.csv")
+
+# people with high education isced
+count(characterize(filter(lfs_income,(B03 >=6 & B03 <= 9))),B05C, B03,wt=weight2) %>%
+  pivot_wider(names_from = B03,values_from = n)
+
+education_higher <- count(characterize(filter(lfs_income,(B03 >=6 & B03 <= 9))),B05C, B03,wt=weight2) %>%
+  pivot_wider(names_from = B03,values_from = n) %>%
+  ungroup()
+view(education_higher)
+education_higher <- education_higher %>%
+  mutate(Total = rowSums(education_higher[,c(2,3,4,5)],na.rm=TRUE))
+view(education_higher)
+#write_excel_csv(education_higher,"data/education_higher.csv")
