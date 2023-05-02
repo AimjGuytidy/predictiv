@@ -1,13 +1,13 @@
-remove.packages("cli")
-remove.packages("usethis")
-remove.packages("tidyverse")
-remove.packages("htmltools")
-install.packages("usethis")
-install.packages("cli")
-install.packages("tidyverse")
-install.packages("htmltools")
-update.packages("Rtools")
-update.packages("devtools")
+# remove.packages("cli")
+# remove.packages("usethis")
+# remove.packages("tidyverse")
+# remove.packages("htmltools")
+# install.packages("usethis")
+# install.packages("cli")
+# install.packages("tidyverse")
+# install.packages("htmltools")
+# update.packages("Rtools")
+# update.packages("devtools")
 require(tidyverse)
 require(haven)
 require(labelled)
@@ -1297,7 +1297,7 @@ characterize(mcf_data) %>%
   geom_boxplot() + 
   coord_flip()
 
-# Model creation and analysis
+# Model creation and analysis####
 mcf_data1 <- mcf_data %>%
   dplyr::select(
     inco_total,
