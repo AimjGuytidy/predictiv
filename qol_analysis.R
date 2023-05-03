@@ -1437,8 +1437,8 @@ model1 <-
       family = "gaussian")
 summary(model1)
 
-mcf_data4 <- mcf_data2 %>%
-  select(-trainings_1,-plan_ahead,-attend_church,-sust_self_employment,
+mcf_data4 <- mcf_data3 %>%
+  select(-trainings_1,-trainings_0,-trainings_6,-plan_ahead,-attend_church,-sust_self_employment,
          -main_sector,-sust_wage,-own_farming,-mart_status,-computer_ownership)
 model1 <-
   glm(quality_life_8_services ~ .,
@@ -1447,7 +1447,7 @@ model1 <-
 summary(model1)
 
 mcf_data5 <- mcf_data4 %>%
-  select(-stratum,-language_2,-determine,-worked_hard,-educ_quality)
+  select(-stratum,-language_2,-determine,-worked_hard,-educ_quality,-equiment_1,-inc_genjob)
 model1 <-
   glm(quality_life_8_services ~ .,
       data = mcf_data5,
@@ -1455,7 +1455,8 @@ model1 <-
 summary(model1)
 
 mcf_data6 <- mcf_data5 %>%
-  select(-inc_genjob,-two_views,-refugee_brkdwn)
+  select(-two_views,-refugee_brkdwn,-phone_ownership,-hh_gender,-language_1,
+         -how_parti,-otherviews)
 model1 <-
   glm(quality_life_8_services ~ .,
       data = mcf_data6,
@@ -1463,7 +1464,7 @@ model1 <-
 summary(model1)
 
 mcf_data7 <- mcf_data6 %>%
-  select(-otherviews,-will_happen,-trainings_0,-ownasset_1,-language_1,-hh_gender,-phone_ownership)
+  select(-mastcard_progr,-ownasset_1,-wek_howork,-com_pers,-will_happen)
 model1 <-
   glm(quality_life_8_services ~ .,
       data = mcf_data7,
@@ -1471,7 +1472,7 @@ model1 <-
 summary(model1)
 
 mcf_data8 <- mcf_data7 %>%
-  select(-life_control,-how_parti,-equiment_1)
+  select(-life_control,-my_actions)
 model1 <-
   glm(quality_life_8_services ~ .,
       data = mcf_data8,
@@ -1479,7 +1480,7 @@ model1 <-
 summary(model1)
 
 mcf_data9 <- mcf_data8 %>%
-  select(-my_actions,-com_pers,-mastcard_progr)
+  select(-inco_total)
 model1 <-
   glm(quality_life_8_services ~ .,
       data = mcf_data9,
@@ -1487,7 +1488,37 @@ model1 <-
 summary(model1)
 
 model3 <-
-  glm(quality_life_8_services ~ .+ (gender*mart_status) + (gender * remi_receive),
-      data = mcf_data9,
+  glm(quality_life_8_services ~ .+ (inco_total*equiment_7) + (gender * remi_receive),
+      data = mcf_data8,
+      family = "gaussian")
+summary(model3)
+
+model3 <-
+  glm(quality_life_8_services ~ .+ (inco_total*gender) + (gender * remi_receive),
+      data = mcf_data8,
+      family = "gaussian")
+summary(model3)
+
+model3 <-
+  glm(quality_life_8_services ~ .+ (inco_total*gender),
+      data = mcf_data8,
+      family = "gaussian")
+summary(model3)
+
+model3 <-
+  glm(quality_life_8_services ~ .+ (education_brkdwn*educ_knowledge),
+      data = mcf_data8,
+      family = "gaussian")
+summary(model3)
+
+model3 <-
+  glm(quality_life_8_services ~ .-gender,
+      data = mcf_data8,
+      family = "gaussian")
+summary(model3)
+
+model3 <-
+  glm(quality_life_8_services ~ .-inco_total,
+      data = mcf_data8,
       family = "gaussian")
 summary(model3)
