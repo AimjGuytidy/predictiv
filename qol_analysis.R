@@ -1422,49 +1422,16 @@ mcf_data2 <-
   do.call(data.frame, lapply(mcf_data2, function(x)
     replace(x, is.infinite(x), NA)))
 model1 <-
-  glm(quality_life_8_services ~ .-computer_ownership-mart_status-own_farming,
+  glm(quality_life_8_services ~ .,
       data = mcf_data2,
       family = "gaussian")
 summary(model1)
 
-mcf_data3 <- mcf_data1 %>%
-  mutate(mart_status = if_else(mart_status == 6,1,0,missing=NA),
-         stratum = case_when(stratum == "Non-employed"~1,
-                             stratum == "Student"~2,
-                             stratum == "Self-employed"~3,
-                             stratum == "Wage-employed"~4),
-         own_farming = if_else(own_farming==0,1,0,missing=NA),
-         computer_ownership = if_else(computer_ownership ==4,1,0,missing=NA),
-         inco_total = log(inco_total),
-         education_brkdwn = case_when(education_brkdwn=="None"~0,
-                                      education_brkdwn=="Primary"~1,
-                                      education_brkdwn=="Secondary"~2,
-                                      education_brkdwn=="TVET"~3,
-                                      education_brkdwn=="University" ~4,
-                                      TRUE~NA_real_))%>%
-  mutate(across(c(my_actions,worked_hard,determine,life_control,plan_ahead,
-                  will_happen),~case_when(.==1~-2,
-                                          .==2~-1,
-                                          .==3~1,
-                                          .==4~2,
-                                          .==5~3,
-                                          TRUE~NA_real_)))%>%
-  mutate(across(c(indi_need,fami_need,sense_purp),~case_when(
-    .==1~-2,
-    .==2~-1,
-    .==3~0,
-    .==4~1,
-    .==5~2,
-    TRUE~NA_real_
-  )))
-mcf_data3 <-
-  do.call(data.frame, lapply(mcf_data3, function(x)
-    replace(x, is.infinite(x), NA)))
-model1 <-
-  glm(quality_life_8_services ~ .,
-      data = mcf_data3,
+model2 <-
+  glm(quality_life_8_services ~ .-,
+      data = mcf_data2,
       family = "gaussian")
-summary(model1)
+summary(model2)
 
 mcf_data4 <- mcf_data3 %>%
   select(-trainings_1,-trainings_0,-trainings_6,-plan_ahead,-attend_church,-sust_self_employment,
