@@ -1514,6 +1514,8 @@ model9 <-
 summary(model9)
 
 model9_df <- as.data.frame(tidy(model9))
+model9_df_temp <- tidy(model9)%>%mutate(p.value=as.numeric(sprintf("%0.22f",p.value)))
+write.xlsx(model9_df_temp,"data/model9_without_income_one.xlsx")
 write.xlsx(model9_df,"data/model9_without_income.xlsx")
 
 model10 <-
