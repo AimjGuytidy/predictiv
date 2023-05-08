@@ -23,6 +23,7 @@ require(flextable)
 require(rvg)
 require(stargazer)
 require(openxlsx)
+require(stats)
 #install.packages("mschart")
 #require(mschart)
 #devtools::install_github('davidgohel/ReporteRs')
@@ -1529,3 +1530,6 @@ summary(model10)
 
 model10_df <- as.data.frame(tidy(model10))
 write.xlsx(model10_df,"data/model10_without_gender.xlsx")
+
+anova(model7,model10,test = "F")
+anova(model7,model9,test = "F") # model 9 is an improvement to model 7
