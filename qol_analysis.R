@@ -3,6 +3,7 @@
 # remove.packages("tidyverse")
 # remove.packages("htmltools")
 # install.packages("usethis")
+# install.packages("stargazer")
 # install.packages("cli")
 # install.packages("tidyverse")
 # install.packages("htmltools")
@@ -20,10 +21,11 @@ require(officer)
 require(magrittr)
 require(flextable)
 require(rvg)
+require(stargazer)
+require(openxlsx)
 #install.packages("mschart")
 #require(mschart)
 #devtools::install_github('davidgohel/ReporteRs')
-
 
 Light_grey <- c("#F2F2F2") #Light grey for the background
 Blue <- c("#097ABC") #Blue
@@ -1510,6 +1512,9 @@ model9 <-
       family = "gaussian")
 summary(model9)
 
+model9_df <- as.data.frame(tidy(model9))
+write.xlsx(model9_df,"data/model9_without_income.xlsx")
+
 model10 <-
   glm(quality_life_8_services ~ .-language_2-sust_wage-sust_self_employment
       -attend_church-plan_ahead-trainings_1-agriculture-industry-services
@@ -1521,3 +1526,6 @@ model10 <-
       data = mcf_data2,
       family = "gaussian")
 summary(model10)
+
+model10_df <- as.data.frame(tidy(model10))
+write.xlsx(model10_df,"data/model10_without_gender.xlsx")
