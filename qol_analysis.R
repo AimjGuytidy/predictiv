@@ -1361,16 +1361,45 @@ mcf_data2 <- mcf_data1 %>%
          gender = if_else(gender==2,0,1,missing = NA),
          hh_gender = if_else(hh_gender == 2, 0,1,missing=NA),
          refugee_brkdwn = if_else(refugee_brkdwn == "Refugee",1,0,missing = NA),
+         education_brkdwn = case_when(education_brkdwn == "None"~0,
+                                      education_brkdwn == "Primary"~1,
+                                      education_brkdwn == "Secondary"~2,
+                                      education_brkdwn == "TVET"~3,
+                                      education_brkdwn == "University"~4),
+         pwd = if_else(pwd==1,1,0,missing=NA),
+         educ_quality = case_when(educ_quality == 1~2,
+                                  educ_quality == 2~1,
+                                  educ_quality == 3~-1,
+                                  educ_quality == 4~-2,
+                                  TRUE~NA_real_),
+         educ_knowledge = case_when(educ_knowledge == 1~3,
+                                    educ_knowledge == 2~2,
+                                    educ_knowledge == 3~1,
+                                    educ_knowledge == 4~0,
+                                    TRUE~NA_real_),
+         how_parti = case_when(how_parti == 1~0,
+                               how_parti == 2~1,
+                               how_parti == 3~2,
+                               how_parti == 4~3,
+                               TRUE~NA_real_),
+         phone_ownership = case_when(phone_ownership == 1~2,
+                                     phone_ownership == 2~1,
+                                     phone_ownership == 3~0,
+                                     TRUE~NA_real_),
          mastcard_progr = if_else(
            mastcard_progr == 2, 0, 1, missing = NA
          ),
          have_electricity = if_else(
            have_electricity == 2, 0,1,missing = NA
          ),
+         agriculture = if_else(main_sector == 1,1,0,missing=NA),
+         industry = if_else(main_sector == 2,1,0,missing=NA),
+         services = if_else(main_sector == 3, 1, 0, missing = NA),
          remi_receive = if_else(remi_receive == 2,0,1,missing = NA),
          com_pers = if_else(com_pers==2,0,1,missing = NA),
          two_views = if_else(two_views == 2,0,1,missing = NA),
          otherviews = if_else(otherviews == 2, 0, 1,missing = NA))%>%
+  select(-main_sector,-own_farming,-computer_ownership,-mart_status)%>%
   characterize()%>%
   mutate_at(c("my_actions","worked_hard","determine","life_control","plan_ahead",
               "will_happen","indi_need","fami_need","sense_purp"),as.character)%>%
