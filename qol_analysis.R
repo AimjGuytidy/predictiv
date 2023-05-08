@@ -1457,7 +1457,67 @@ model5 <-
       -attend_church-plan_ahead-trainings_1-agriculture-industry-services
       -stratum-educ_quality-refugee_brkdwn-phone_ownership-language_1-ownasset_1
       -inc_genjob-two_views-otherviews-will_happen-determine-worked_hard
-      -trainings_0,
+      -trainings_0-hh_gender-mastcard_progr-equiment_1-sense_purp-how_parti
+      -life_control-my_actions-trainings_6,
       data = mcf_data2,
       family = "gaussian")
 summary(model5)
+
+model6 <-
+  glm(quality_life_8_services ~ .-language_2-sust_wage-sust_self_employment
+      -attend_church-plan_ahead-trainings_1-agriculture-industry-services
+      -stratum-educ_quality-refugee_brkdwn-phone_ownership-language_1-ownasset_1
+      -inc_genjob-two_views-otherviews-will_happen-determine-worked_hard
+      -trainings_0-hh_gender-mastcard_progr-equiment_1-sense_purp-how_parti
+      -life_control-my_actions-trainings_6-com_pers-Nocomputer,
+      data = mcf_data2,
+      family = "gaussian")
+summary(model6)
+
+model7 <-
+  glm(quality_life_8_services ~ .-language_2-sust_wage-sust_self_employment
+      -attend_church-plan_ahead-trainings_1-agriculture-industry-services
+      -stratum-educ_quality-refugee_brkdwn-phone_ownership-language_1-ownasset_1
+      -inc_genjob-two_views-otherviews-will_happen-determine-worked_hard
+      -trainings_0-hh_gender-mastcard_progr-equiment_1-sense_purp-how_parti
+      -life_control-my_actions-trainings_6-com_pers-Nocomputer-equiment_7
+      -indi_need,
+      data = mcf_data2,
+      family = "gaussian")
+summary(model7)
+
+model8 <-
+  glm(quality_life_8_services ~ .-language_2-sust_wage-sust_self_employment
+      -attend_church-plan_ahead-trainings_1-agriculture-industry-services
+      -stratum-educ_quality-refugee_brkdwn-phone_ownership-language_1-ownasset_1
+      -inc_genjob-two_views-otherviews-will_happen-determine-worked_hard
+      -trainings_0-hh_gender-mastcard_progr-equiment_1-sense_purp-how_parti
+      -life_control-my_actions-trainings_6-com_pers-Nocomputer-equiment_7
+      -indi_need-inco_total+(gender*remi_receive),
+      data = mcf_data2,
+      family = "gaussian")
+summary(model8)
+
+model9 <-
+  glm(quality_life_8_services ~ .-language_2-sust_wage-sust_self_employment
+      -attend_church-plan_ahead-trainings_1-agriculture-industry-services
+      -stratum-educ_quality-refugee_brkdwn-phone_ownership-language_1-ownasset_1
+      -inc_genjob-two_views-otherviews-will_happen-determine-worked_hard
+      -trainings_0-hh_gender-mastcard_progr-equiment_1-sense_purp-how_parti
+      -life_control-my_actions-trainings_6-com_pers-Nocomputer-equiment_7
+      -indi_need-inco_total,
+      data = mcf_data2,
+      family = "gaussian")
+summary(model9)
+
+model10 <-
+  glm(quality_life_8_services ~ .-language_2-sust_wage-sust_self_employment
+      -attend_church-plan_ahead-trainings_1-agriculture-industry-services
+      -stratum-educ_quality-refugee_brkdwn-phone_ownership-language_1-ownasset_1
+      -inc_genjob-two_views-otherviews-will_happen-determine-worked_hard
+      -trainings_0-hh_gender-mastcard_progr-equiment_1-sense_purp-how_parti
+      -life_control-my_actions-trainings_6-com_pers-Nocomputer-equiment_7
+      -indi_need-gender,
+      data = mcf_data2,
+      family = "gaussian")
+summary(model10)
