@@ -1428,19 +1428,18 @@ model1 <-
 summary(model1)
 
 model2 <-
-  glm(quality_life_8_services ~ .-,
+  glm(quality_life_8_services ~ .-language_2-sust_wage-sust_self_employment
+      -attend_church-plan_ahead-trainings_1-agriculture-industry,
       data = mcf_data2,
       family = "gaussian")
 summary(model2)
 
-mcf_data4 <- mcf_data3 %>%
-  select(-trainings_1,-trainings_0,-trainings_6,-plan_ahead,-attend_church,-sust_self_employment,
-         -main_sector,-sust_wage,-own_farming,-mart_status,-computer_ownership)
-model1 <-
-  glm(quality_life_8_services ~ .,
-      data = mcf_data4,
+model3 <-
+  glm(quality_life_8_services ~ .-language_2-sust_wage-sust_self_employment
+      -attend_church-plan_ahead-trainings_1-agriculture-industry,
+      data = mcf_data2,
       family = "gaussian")
-summary(model1)
+summary(model3)
 
 mcf_data5 <- mcf_data4 %>%
   select(-stratum,-language_2,-determine,-worked_hard,-educ_quality,-equiment_1,-inc_genjob)
