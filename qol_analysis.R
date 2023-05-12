@@ -1514,9 +1514,9 @@ model9 <-
 summary(model9)
 
 model9_df <- as.data.frame(tidy(model9))
-model9_df_temp <- tidy(model9)%>%mutate(p.value=sprintf("%0.35f",p.value))
-write.xlsx(model9_df_temp,"data/model9_without_income_two.xlsx")
-write.xlsx(model9_df,"data/model9_without_income.xlsx")
+# model9_df_temp <- tidy(model9)%>%mutate(p.value=sprintf("%0.35f",p.value))
+# write.xlsx(model9_df_temp,"data/model9_without_income_two.xlsx")
+# write.xlsx(model9_df,"data/model9_without_income.xlsx")
 
 model10 <-
   glm(quality_life_8_services ~ .-language_2-sust_wage-sust_self_employment
@@ -1531,7 +1531,100 @@ model10 <-
 summary(model10)
 
 model10_df <- as.data.frame(tidy(model10))
-write.xlsx(model10_df,"data/model10_without_gender.xlsx")
+# write.xlsx(model10_df,"data/model10_without_gender.xlsx")
 
 anova(model7,model10,test = "F")
 anova(model7,model9,test = "F") # model 9 is an improvement to model 7
+
+model11 <-
+  glm(quality_life_8_services ~ .-language_2-sust_wage-sust_self_employment
+      -attend_church-plan_ahead-trainings_1-agriculture-industry-services
+      -stratum-educ_quality-refugee_brkdwn-phone_ownership-language_1-ownasset_1
+      -inc_genjob-two_views-otherviews-will_happen-determine-worked_hard
+      -trainings_0-hh_gender-mastcard_progr-equiment_1-sense_purp-how_parti
+      -life_control-my_actions-trainings_6-com_pers-Nocomputer-equiment_7
+      -indi_need-gender+(widower*gender),
+      data = mcf_data2,
+      family = "gaussian")
+summary(model11)
+
+
+
+
+
+
+
+
+view(
+  characterize(mcf_data2) %>%
+    group_by(education_brkdwn) %>%
+    summarize(total = n()) %>%
+    ungroup() %>%
+    mutate(prop_total = round(total * 100 / sum(total), 2)) %>%
+    print(n = 888)
+)
+
+characterize(mcf_data2) %>%
+  group_by(education_brkdwn) %>%
+  summarize(mean_qol = mean(quality_life_8_services))
+
+
+view(
+  characterize(mcf_data2) %>%
+    group_by(widower) %>%
+    summarize(total = n()) %>%
+    ungroup() %>%
+    mutate(prop_total = round(total * 100 / sum(total), 2)) %>%
+    print(n = 888)
+)
+
+characterize(mcf_data2) %>%
+  group_by(widower) %>%
+  summarize(mean_qol = mean(quality_life_8_services))
+
+view(
+  characterize(mcf_data2) %>%
+    group_by(Nofarming) %>%
+    summarize(total = n()) %>%
+    ungroup() %>%
+    mutate(prop_total = round(total * 100 / sum(total), 2)) %>%
+    print(n = 888)
+)
+
+characterize(mcf_data2) %>%
+  group_by(Nofarming) %>%
+  summarize(mean_qol = mean(quality_life_8_services))
+
+
+view(
+  characterize(mcf_data2) %>%
+    group_by(pwd) %>%
+    summarize(total = n()) %>%
+    ungroup() %>%
+    mutate(prop_total = round(total * 100 / sum(total), 2)) %>%
+    print(n = 888)
+)
+
+characterize(mcf_data2) %>%
+  group_by(pwd) %>%
+  summarize(mean_qol = mean(quality_life_8_services))
+
+mcf_data%>%
+  ggplot(aes(age_3_groups,quality_life_8_services))+
+  geom_boxplot()+
+  xlab("Age groups")+
+  ylab("QLI")+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.background = element_rect(fill = c("#F2F2F2")),
+    panel.background = element_rect(fill = c("#F2F2F2")),
+    panel.grid = element_blank(),
+    #remove x axis ticks
+    # axis.title.x = element_blank(),
+    # axis.title.y = element_blank(),
+    #remove y axis labels
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank()#remove y axis ticks
+  )
+
+mcf_data$age_3_groups
