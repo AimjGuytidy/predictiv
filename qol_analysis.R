@@ -167,7 +167,7 @@ mcf_data %>%
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank()#remove y axis ticks
   )
-
+#Age#######
 mcf_data %>%
   select(age, quality_life_8_services, weights) %>%
   group_by(age) %>%
@@ -175,14 +175,16 @@ mcf_data %>%
   ggplot(aes(age, mean_qol_age)) +
   geom_point() +
   geom_smooth(se = FALSE, color = Blue) +
+  xlab("Age")+
+  ylab("Average QLI")+
   theme(plot.title = element_text(hjust = 0.5)) +
   theme(
     plot.background = element_rect(fill = c("#F2F2F2")),
     panel.background = element_rect(fill = c("#F2F2F2")),
     panel.grid = element_blank(),
     #remove x axis ticks
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
+    #axis.title.x = element_blank(),
+    #axis.title.y = element_blank(),
     #remove y axis labels
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank()#remove y axis ticks
@@ -691,14 +693,14 @@ view(
     print(n = 888)
 )
 
+levels(mcf_data$wek_howork) <- gsub("\\(.+,|]", "", levels(mcf_data$wek_howork))
+
 characterize(mcf_data) %>%
   group_by(wek_howork) %>%
   summarize(mean_qol = mean(quality_life_8_services)) %>%
   ggplot(aes(factor(wek_howork), mean_qol)) +
   geom_bar(stat = "identity", fill = Blue) +
-  geom_text(aes(label = paste0(round(mean_qol, 1))),
-            vjust = -.25,
-            size = 2.25) +
+  scale_x_discrete(breaks = seq(0, 170, by = 10)) +
   theme(plot.title = element_text(hjust = 0.5)) +
   theme(
     plot.background = element_rect(fill = c("#F2F2F2")),
@@ -1609,11 +1611,13 @@ characterize(mcf_data2) %>%
   group_by(pwd) %>%
   summarize(mean_qol = mean(quality_life_8_services))
 
-mcf_data%>%
-  ggplot(aes(age_3_groups,quality_life_8_services))+
-  geom_boxplot()+
-  xlab("Age groups")+
-  ylab("QLI")+
+characterize(mcf_data2) %>%
+  group_by(age) %>%
+  summarize(mean_qol = mean(quality_life_8_services))%>%
+  ggplot(aes(age,mean_qol))+
+  geom_bar(stat = "identity",fill=Blue)+
+  xlab("Age")+
+  ylab("Average QLI")+
   theme(plot.title = element_text(hjust = 0.5)) +
   theme(
     plot.background = element_rect(fill = c("#F2F2F2")),
@@ -1627,4 +1631,6 @@ mcf_data%>%
     axis.ticks.y = element_blank()#remove y axis ticks
   )
 
-mcf_data$age_3_groups
+
+
+

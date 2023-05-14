@@ -83,6 +83,7 @@ ggplot(Default)+
 ggplot(Default)+
   geom_boxplot(aes(default,balance,fill = default))
 
+# Linear Discriminant Analysis
 
 
 
