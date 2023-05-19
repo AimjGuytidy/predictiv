@@ -169,6 +169,15 @@ mcf_data %>%
   )
 #Age#######
 mcf_data %>%
+  group_by(age_3_groups) %>%
+  summarize(total = n()) %>%
+  ungroup() %>%
+  mutate(prop_total = total * 100 / sum(total))
+
+
+
+
+mcf_data %>%
   select(age, quality_life_8_services, weights) %>%
   group_by(age) %>%
   summarise(mean_qol_age = mean(quality_life_8_services)) %>%
