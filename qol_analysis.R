@@ -210,6 +210,24 @@ mcf_data %>%
   group_by(gender) %>%
   summarize(mean_qol = mean(quality_life_8_services))
 
+
+mcf_data %>%
+  characterize()%>%
+  ggplot(aes(y = quality_life_8_services,x = as.factor(gender)))+
+  geom_boxplot()+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.background = element_rect(fill = c("#F2F2F2")),
+    panel.background = element_rect(fill = c("#F2F2F2")),
+    panel.grid = element_blank(),
+    #remove x axis ticks
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    # remove y axis labels
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank()#remove y axis ticks
+  )
+
 mcf_data %>%
   group_by(geo_entity) %>%
   summarize(total = n()) %>%
@@ -1641,5 +1659,20 @@ characterize(mcf_data2) %>%
   )
 
 
-
+mcf_data %>%
+  characterize()%>%
+  ggplot(aes(y = quality_life_8_services,x = as.factor(education_brkdwn)))+
+  geom_boxplot()+
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(
+    plot.background = element_rect(fill = c("#F2F2F2")),
+    panel.background = element_rect(fill = c("#F2F2F2")),
+    panel.grid = element_blank(),
+    #remove x axis ticks
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    # remove y axis labels
+    axis.ticks.x = element_blank(),
+    axis.ticks.y = element_blank()#remove y axis ticks
+  )
 
